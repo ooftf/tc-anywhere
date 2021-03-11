@@ -1,0 +1,3 @@
+include ':iorderfix-plugin'
+include ':app'
+rootProject.name = "IOrderFix"

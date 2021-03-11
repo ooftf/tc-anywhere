@@ -1,0 +1,28 @@
+apply plugin: 'groovy'
+//apply from: 'bintray.gradle'
+apply plugin: 'ooftf-publish'
+publish {
+    repoName = 'crm'
+    groupId = 'com.ooftf.trycatch'
+    override = true
+    publishVersion = '0.0.1'
+}
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:4.1.2'
+}
+
+repositories {
+    mavenCentral()
+}
+task sourcesJar(type: Jar) {
+    from project.file('src/main/groovy')
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+
