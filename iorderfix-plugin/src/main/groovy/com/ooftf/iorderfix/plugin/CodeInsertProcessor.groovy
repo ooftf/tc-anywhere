@@ -1,9 +1,9 @@
 package com.ooftf.iorderfix.plugin
 
-
 import org.apache.commons.io.IOUtils
 import org.objectweb.asm.*
 import org.objectweb.asm.commons.AdviceAdapter
+import org.objectweb.asm.commons.Method
 
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
@@ -111,7 +111,8 @@ class CodeInsertProcessor {
         }
         FileInputStream inputStream = new FileInputStream(file)
         FileOutputStream outputStream = new FileOutputStream(optClass)
-
+        System.err.println("optClass::" + optClass.absolutePath)
+        System.err.println("file::" + file.absolutePath)
         def bytes = doGenerateCode(inputStream, item)
         outputStream.write(bytes)
         inputStream.close()
@@ -125,8 +126,9 @@ class CodeInsertProcessor {
 
     private byte[] doGenerateCode(InputStream inputStream, RegisterInfo item) {
         ClassReader cr = new ClassReader(inputStream)
-        ClassWriter cw = new ClassWriter(cr, 0)
-        ClassVisitor cv = new MyClassVisitor(Opcodes.ASM6, cw, item)
+        ClassWriter cw = new ClassWriter(cr, 0)//ClassWriter.COMPUTE_FRAMES
+
+        ClassVisitor cv = new MyClassVisitor(Opcodes.ASM7, cw, item)
         cr.accept(cv, ClassReader.EXPAND_FRAMES)
         return cw.toByteArray()
     }
@@ -151,98 +153,56 @@ class CodeInsertProcessor {
             MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions)
 
             if (name == extension.methodName) { //注入代码到指定的方法之中
-                return new AdviceAdapter(Opcodes.ASM6, mv, access, name, desc) {
-                    private Label from = new Label(),
-                                  to = new Label(),
-                                  target = new Label();
+                return new AdviceAdapter(Opcodes.ASM7, mv, access, name, desc) {
+                    Label beginLabel = new Label()
+                    Label endLabel = new Label()
                     // 方法进入时修改字节码
                     protected void onMethodEnter() {
                         //标志：try块开始位置
-                        visitLabel(from);
-                        visitTryCatchBlock(from,
-                                to,
-                                target,
-                                "java/lang/Exception");
+                        /* visitLabel(from);
+                         visitTryCatchBlock(from,
+                                 to,
+                                 target,
+                                 "java/lang/Exception");*/
+                        System.err.println("descriptor::${Type.getType(Exception.class).descriptor}")
+                        mark(beginLabel)
+                        Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
+                        invokeStatic(t, new Method("print", "()V"));
+                        mark(endLabel);
+
+                        //从栈顶加载异常(复制一份给onThrowing当参数用)
+                        //dup();
+                        //将原有的异常抛出(不破坏原有异常逻辑)
+                        //throwException();
                     }
 
                     // 访问局部变量和操作数栈
-                    public void visitMaxs(int maxStack, int maxLocals) {
-                        //标志：try块结束
-                        mv.visitLabel(to);
-
-                        //标志：catch块开始位置
-                        mv.visitLabel(target);
-                        mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object["java/lang/Exception"]);
-
-                        // 异常信息保存到局部变量
-                        int local = newLocal(Type.LONG_TYPE);
-                        mv.visitVarInsn(ASTORE, local);
-
-                        // 抛出异常
-                        mv.visitVarInsn(ALOAD, local);
-                        mv.visitInsn(ATHROW);
+                    void visitMaxs(int maxStack, int maxLocals) {
+                        Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
+                        invokeStatic(t, new Method("log", "()V"));
+                        //catchException(from,to,Type.getType(Exception.class))
                         super.visitMaxs(maxStack, maxLocals);
                     }
 
                     // 方法退出时修改字节码
                     protected void onMethodExit(int opcode) {
+                        //判断不是以一场结束
+                        if (ATHROW != opcode) {
+                            //加载正常的返回值
+                            //returnValue()
+                            push((Type) null);
+                            //只有一个参数就是返回值
 
+                            Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
+                            invokeStatic(t, new Method("print", "()V"));
+                            catchException(beginLabel, endLabel, Type.getType(Throwable.class))
+                        }
                     }
                 }
                 /*boolean _static = (access & Opcodes.ACC_STATIC) > 0
-                mv = new MyMethodVisitor(Opcodes.ASM6, mv, _static)*/
+                mv = new MyMethodVisitor(Opcodes.ASM7, mv, _static)*/
             }
             return mv
-        }
-    }
-
-    class MyMethodVisitor extends MethodVisitor {
-        boolean _static;
-
-        MyMethodVisitor(int api, MethodVisitor mv, boolean _static) {
-            super(api, mv)
-            this._static = _static;
-        }
-        Label start = new Label()
-        Label end = new Label()
-        Label handler = new Label()
-        //Opcodes.IRETURN
-        @Override
-        void visitCode() {
-            super.visitCode()
-            System.out.println("visitCode")
-            visitLabel(start)
-        }
-
-        @Override
-        void visitInsn(int opcode) {
-            System.out.println("visitInsn::${opcode}")
-            super.visitInsn(opcode)
-        }
-
-        @Override
-        void visitMaxs(int maxStack, int maxLocals) {
-            System.out.println("visitMaxs::${maxStack}::${maxLocals}")
-            //标志：try块结束
-            mv.visitLabel(end);
-
-            //标志：catch块开始位置
-            mv.visitLabel(handler);
-            // mv.visitTryCatchBlock(start, end, handler, "java/lang/Exception")
-            /*def obj = new Object[1]
-            obj[0] = "java/lang/Exception"*/
-            //mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, obj);
-
-            // 异常信息保存到局部变量
-            /*     int local = mv.visitTypeInsn(Opcodes.NEW, Type.LONG_TYPE.className)
-
-                 mv.visitVarInsn(Opcodes.ASTORE, local)*/
-
-            // 抛出异常
-            /*  mv.visitVarInsn(ALOAD, local);
-              mv.visitInsn(ATHROW);*/
-            super.visitMaxs(maxStack, maxLocals)
-            //super.visitMaxs(maxStack + 4, maxLocals)
         }
     }
 }
