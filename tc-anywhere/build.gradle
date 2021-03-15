@@ -3,7 +3,7 @@ apply plugin: 'groovy'
 apply plugin: 'ooftf-publish'
 publish {
     override = true
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.2'
 }
 dependencies {
     implementation gradleApi()

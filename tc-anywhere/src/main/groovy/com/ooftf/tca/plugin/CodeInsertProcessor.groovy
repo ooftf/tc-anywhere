@@ -148,35 +148,49 @@ class CodeInsertProcessor {
         @Override
         MethodVisitor visitMethod(int access, String name, String desc,
                                   String signature, String[] exceptions) {
-            System.out.println("visitMethod::${name}")
+            System.out.println("visitMethod::${name}::${desc}")
             MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions)
-
-            if (name == extension.methodName) { //注入代码到指定的方法之中
+            if (extension.methodName.contains(name + desc)) { //注入代码到指定的方法之中
+                if (!desc.endsWith("V")) {
+                    throw RuntimeException("only support methods with no return value ${extension.className}::${name}")
+                }
                 return new AdviceAdapter(Opcodes.ASM7, mv, access, name, desc) {
                     Label beginLabel = new Label()
                     Label endLabel = new Label()
                     // 方法进入时修改字节码
                     protected void onMethodEnter() {
                         mark(beginLabel)
-                        mark(endLabel);
+
                     }
 
-                    // 方法退出时修改字节码
+                    @Override
+                    void visitMaxs(int maxStack, int maxLocals) {
+                        System.out.println("in visitMaxs")
+
+                        super.visitMaxs(maxStack, maxLocals)
+                        System.out.println("out visitMaxs")
+                    }
+// 方法退出时修改字节码
                     protected void onMethodExit(int opcode) {
                         //判断不是以一场结束
                         if (ATHROW != opcode) {
+                            System.out.println("!!!!!!ATHROW")
+                            //mark(endLabel)
                             //加载正常的返回值
                             //returnValue()
-                            push((Type) null);
+                            //push((Type) null);
                             //只有一个参数就是返回值
                             /*Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
-                            invokeStatic(t, new Method("print", "()V"));*/
+                            invokeStatic(t, new Method("print", "( )V"));*/
+                            //returnValue()
+                            mark(endLabel)
+                            push((Type) null);
                             catchException(beginLabel, endLabel, Type.getType(Throwable.class))
+                        } else {
+                            System.out.println("ATHROW")
                         }
                     }
                 }
-                /*boolean _static = (access & Opcodes.ACC_STATIC) > 0
-                mv = new MyMethodVisitor(Opcodes.ASM7, mv, _static)*/
             }
             return mv
         }

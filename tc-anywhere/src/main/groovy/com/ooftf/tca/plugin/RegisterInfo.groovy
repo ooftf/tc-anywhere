@@ -6,9 +6,9 @@ package com.ooftf.tca.plugin
 class RegisterInfo {
     //以下是可配置参数
     String className = ''
-    String methodName = ''
+    String[] methodName = ''
 
-    RegisterInfo(String className, String methodName) {
+    RegisterInfo(String className, String[] methodName) {
         this.className = className
         this.methodName = methodName
     }

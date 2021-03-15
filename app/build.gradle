@@ -1,10 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'try-catch'
+    id 'tc-anywhere'
 }
-TryCatch {
-    tryCatch 'com.ooftf.iorderfix.MainActivity','test'
+tca {
+    tryCatch 'com.ooftf.tca.MainActivity','test(Lcom/ooftf/tca/MainActivity;)V'
 }
 android {
     compileSdkVersion 30

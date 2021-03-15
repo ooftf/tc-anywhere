@@ -9,13 +9,13 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        test(2)
+        test(this)
     }
 
-    open fun test(isd: Int) {
-        if (isd == 6) {
-            return
+    open fun test(isd: MainActivity) {
+        if (isd.equals(6)) {
         } else {
+            5/0
             Log.e("test", "555555")
         }
     }

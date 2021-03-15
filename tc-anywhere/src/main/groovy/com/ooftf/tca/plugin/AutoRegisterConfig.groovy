@@ -9,7 +9,7 @@ class AutoRegisterConfig {
 
     AutoRegisterConfig() {}
 
-    public void tryCatch(String className, String methodName) {
+    public void tryCatch(String className, String[] methodName) {
         registerInfo.add(new RegisterInfo(className, methodName))
     }
 
