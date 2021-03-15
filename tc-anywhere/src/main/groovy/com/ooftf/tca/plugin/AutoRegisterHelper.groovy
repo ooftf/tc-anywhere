@@ -1,4 +1,4 @@
-package com.ooftf.iorderfix.plugin
+package com.ooftf.tca.plugin
 
 import com.google.gson.Gson
 import org.gradle.api.Project

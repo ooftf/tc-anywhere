@@ -1,4 +1,4 @@
-package com.ooftf.iorderfix.plugin
+package com.ooftf.tca.plugin
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
@@ -10,7 +10,7 @@ import org.gradle.api.Project
  * @author billy.qi* @since 17/3/14 17:35
  */
 public class RegisterPlugin implements Plugin<Project> {
-    public static final String EXT_NAME = 'TryCatch'
+    public static final String EXT_NAME = 'tca'
 
     @Override
     public void apply(Project project) {

@@ -1,9 +1,8 @@
-package com.ooftf.iorderfix.plugin
+package com.ooftf.tca.plugin
 
 import org.apache.commons.io.IOUtils
 import org.objectweb.asm.*
 import org.objectweb.asm.commons.AdviceAdapter
-import org.objectweb.asm.commons.Method
 
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
@@ -158,30 +157,8 @@ class CodeInsertProcessor {
                     Label endLabel = new Label()
                     // 方法进入时修改字节码
                     protected void onMethodEnter() {
-                        //标志：try块开始位置
-                        /* visitLabel(from);
-                         visitTryCatchBlock(from,
-                                 to,
-                                 target,
-                                 "java/lang/Exception");*/
-                        System.err.println("descriptor::${Type.getType(Exception.class).descriptor}")
                         mark(beginLabel)
-                        Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
-                        invokeStatic(t, new Method("print", "()V"));
                         mark(endLabel);
-
-                        //从栈顶加载异常(复制一份给onThrowing当参数用)
-                        //dup();
-                        //将原有的异常抛出(不破坏原有异常逻辑)
-                        //throwException();
-                    }
-
-                    // 访问局部变量和操作数栈
-                    void visitMaxs(int maxStack, int maxLocals) {
-                        Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
-                        invokeStatic(t, new Method("log", "()V"));
-                        //catchException(from,to,Type.getType(Exception.class))
-                        super.visitMaxs(maxStack, maxLocals);
                     }
 
                     // 方法退出时修改字节码
@@ -192,9 +169,8 @@ class CodeInsertProcessor {
                             //returnValue()
                             push((Type) null);
                             //只有一个参数就是返回值
-
-                            Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
-                            invokeStatic(t, new Method("print", "()V"));
+                            /*Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
+                            invokeStatic(t, new Method("print", "()V"));*/
                             catchException(beginLabel, endLabel, Type.getType(Throwable.class))
                         }
                     }

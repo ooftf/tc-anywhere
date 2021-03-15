@@ -1,8 +1,9 @@
-package com.ooftf.iorderfix
+package com.ooftf.tca
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.ooftf.iorderfix.R
 
 open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

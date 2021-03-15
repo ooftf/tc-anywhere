@@ -2,8 +2,6 @@ apply plugin: 'groovy'
 //apply from: 'bintray.gradle'
 apply plugin: 'ooftf-publish'
 publish {
-    repoName = 'crm'
-    groupId = 'com.ooftf.trycatch'
     override = true
     publishVersion = '0.0.1'
 }

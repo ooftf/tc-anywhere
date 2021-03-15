@@ -1,4 +1,4 @@
-package com.ooftf.iorderfix.plugin
+package com.ooftf.tca.plugin
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager

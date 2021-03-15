@@ -1,4 +1,4 @@
-package com.ooftf.iorderfix.plugin
+package com.ooftf.tca.plugin
 /**
  * aop的配置信息
  * @author billy.qi* @since 17/3/28 11:48
