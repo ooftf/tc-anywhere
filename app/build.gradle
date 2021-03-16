@@ -4,14 +4,14 @@ plugins {
     id 'tc-anywhere'
 }
 tca {
-    tryCatch 'com.ooftf.tca.MainActivity','test(Lcom/ooftf/tca/MainActivity;)V'
+    tc 'com.ooftf.tca.MainActivity', 'test(Lcom/ooftf/tca/MainActivity;)V', 'onCreate(Landroid/os/Bundle;)V'
 }
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.ooftf.iorderfix"
+        applicationId "com.ooftf.tca"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

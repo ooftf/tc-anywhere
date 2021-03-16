@@ -9,7 +9,7 @@ import org.gradle.api.Project
  * 自动注册插件入口
  * @author billy.qi* @since 17/3/14 17:35
  */
-public class RegisterPlugin implements Plugin<Project> {
+public class TCAPlugin implements Plugin<Project> {
     public static final String EXT_NAME = 'tca'
 
     @Override
@@ -18,11 +18,11 @@ public class RegisterPlugin implements Plugin<Project> {
          * 注册transform接口
          */
         def isApp = project.plugins.hasPlugin(AppPlugin)
-        project.extensions.create(EXT_NAME, AutoRegisterConfig)
+        project.extensions.create(EXT_NAME, TCAExtensions)
         if (isApp) {
-            println 'project(' + project.name + ') apply iorder-fix plugin'
+            println 'project(' + project.name + ') apply tc-anywhere plugin'
             def android = project.extensions.getByType(AppExtension)
-            def transformImpl = new TryCatchTransform(project)
+            def transformImpl = new TCATransform(project)
             android.registerTransform(transformImpl)
             project.afterEvaluate {
                 init(project, transformImpl)//此处要先于transformImpl.transform方法执行
@@ -30,8 +30,8 @@ public class RegisterPlugin implements Plugin<Project> {
         }
     }
 
-    static void init(Project project, TryCatchTransform transformImpl) {
-        AutoRegisterConfig config = project.extensions.findByName(EXT_NAME) as AutoRegisterConfig
+    static void init(Project project, TCATransform transformImpl) {
+        TCAExtensions config = project.extensions.findByName(EXT_NAME) as TCAExtensions
         transformImpl.config = config
     }
 

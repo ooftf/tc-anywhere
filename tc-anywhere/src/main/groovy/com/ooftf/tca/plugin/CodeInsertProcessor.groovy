@@ -14,13 +14,13 @@ import java.util.zip.ZipEntry
  * @author billy.qi* @since 17/3/20 11:48
  */
 class CodeInsertProcessor {
-    ArrayList<RegisterInfo> extension
+    ArrayList<TCInfo> extension
 
-    private CodeInsertProcessor(ArrayList<RegisterInfo> extension) {
+    private CodeInsertProcessor(ArrayList<TCInfo> extension) {
         this.extension = extension
     }
 
-    static void insertInitCodeTo(ArrayList<RegisterInfo> extension, File file) {
+    static void insertInitCodeTo(ArrayList<TCInfo> extension, File file) {
         System.out.println("insertInitCodeTo${file.absolutePath}")
         if (extension != null && !extension.isEmpty()) {
             System.out.println("CodeInsertProcessor")
@@ -30,7 +30,7 @@ class CodeInsertProcessor {
         }
     }
 
-    static void insertDirectoryCodeTo(ArrayList<RegisterInfo> extension, File file, String root) {
+    static void insertDirectoryCodeTo(ArrayList<TCInfo> extension, File file, String root) {
         System.out.println("insertDirectoryCodeTo${file.absolutePath}")
         if (extension != null && !extension.isEmpty()) {
             System.out.println("insertDirectoryCodeTo")
@@ -78,7 +78,7 @@ class CodeInsertProcessor {
         return jarFile
     }
 
-    RegisterInfo findRegisterInfo(String className) {
+    TCInfo findRegisterInfo(String className) {
         System.out.println("findRegisterInfo--start::${className}")
         if (className == null) {
             return null
@@ -123,7 +123,7 @@ class CodeInsertProcessor {
         return bytes
     }
 
-    private byte[] doGenerateCode(InputStream inputStream, RegisterInfo item) {
+    private byte[] doGenerateCode(InputStream inputStream, TCInfo item) {
         ClassReader cr = new ClassReader(inputStream)
         ClassWriter cw = new ClassWriter(cr, 0)//ClassWriter.COMPUTE_FRAMES
 
@@ -133,9 +133,9 @@ class CodeInsertProcessor {
     }
 
     class MyClassVisitor extends ClassVisitor {
-        RegisterInfo extension
+        TCInfo extension
 
-        MyClassVisitor(int api, ClassVisitor cv, RegisterInfo item) {
+        MyClassVisitor(int api, ClassVisitor cv, TCInfo item) {
             super(api, cv)
             this.extension = item
         }

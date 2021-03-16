@@ -10,12 +10,12 @@ import org.gradle.api.Project
  *
  * @author billy.qi* @since 17/3/21 11:48
  */
-class TryCatchTransform extends Transform {
+class TCATransform extends Transform {
 
     Project project
-    AutoRegisterConfig config;
+    TCAExtensions config;
 
-    TryCatchTransform(Project project) {
+    TCATransform(Project project) {
         this.project = project
     }
 

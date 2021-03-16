@@ -1,9 +1,8 @@
 apply plugin: 'groovy'
-//apply from: 'bintray.gradle'
 apply plugin: 'ooftf-publish'
 publish {
     override = true
-    publishVersion = '0.0.2'
+    publishVersion = '0.0.1'
 }
 dependencies {
     implementation gradleApi()
