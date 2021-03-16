@@ -1,5 +1,6 @@
 # tc-anywhere
-可以在任何地方添加try catch 操作；目前只是实现了在无返回值的情况下添加try catch操作
+要解决的问题：有一些第三方包中存在一些崩溃问题，如果能try catch处理并不会影响程序运行，这时候就可以使用tc-anywhere来处理  
+目标：可以在任何地方添加try catch 操作；（目前只是实现了在方法无返回值的情况下添加try catch操作）
 # 使用
 ```groovy
  //project
