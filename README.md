@@ -9,10 +9,10 @@
         maven {
             url "https://dl.bintray.com/ooftf/maven"
         }
-    }
-    dependencies {
-        classpath 'com.ooftf:tc-anywhere:0.0.1'
-    }
+ }
+ dependencies {
+       classpath 'com.ooftf:tc-anywhere:0.0.1'
+ }
  //app
  apply plugin: 'tc-anywhere'
  // 第一个参数为要插入tryCatch的类名，后面的为该类的方法名（只支持无返回值的方法）
