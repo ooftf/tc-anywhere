@@ -17,6 +17,6 @@
  apply plugin: 'tc-anywhere'
  // 第一个参数为要插入tryCatch的类名，后面的为该类的方法名（只支持无返回值的方法）
  tca {
-    tc 'com.ooftf.tca.MainActivity', 'test(Lcom/ooftf/tca/MainActivity;)V', 'onCreate(Landroid/os/Bundle;)V'
+    tc 'com.ooftf.tca.MainActivity', 'test(I)V', 'onCreate(Landroid/os/Bundle;)V'
  }   
 ```

@@ -21,9 +21,7 @@ class CodeInsertProcessor {
     }
 
     static void insertInitCodeTo(ArrayList<TCInfo> extension, File file) {
-        System.out.println("insertInitCodeTo${file.absolutePath}")
         if (extension != null && !extension.isEmpty()) {
-            System.out.println("CodeInsertProcessor")
             CodeInsertProcessor processor = new CodeInsertProcessor(extension)
             processor.generateCodeIntoJarFile(file)
 
@@ -31,9 +29,7 @@ class CodeInsertProcessor {
     }
 
     static void insertDirectoryCodeTo(ArrayList<TCInfo> extension, File file, String root) {
-        System.out.println("insertDirectoryCodeTo${file.absolutePath}")
         if (extension != null && !extension.isEmpty()) {
-            System.out.println("insertDirectoryCodeTo")
             CodeInsertProcessor processor = new CodeInsertProcessor(extension)
             processor.generateCodeIntoClassFile(file, root)
         }
@@ -54,7 +50,6 @@ class CodeInsertProcessor {
                 ZipEntry zipEntry = new ZipEntry(entryName)
                 InputStream inputStream = file.getInputStream(jarEntry)
                 jarOutputStream.putNextEntry(zipEntry)
-                System.out.println("generateCodeIntoJarFile - findRegisterInfo")
                 String className = jarEntry.getName().replace('/', '.').replace('\\', '.').replace(File.separator, '.')
                 def clazz = findRegisterInfo(className)
                 if (clazz != null) {
@@ -79,7 +74,7 @@ class CodeInsertProcessor {
     }
 
     TCInfo findRegisterInfo(String className) {
-        System.out.println("findRegisterInfo--start::${className}")
+        System.out.println("tac-scanClass::${className}")
         if (className == null) {
             return null
         }
@@ -90,7 +85,6 @@ class CodeInsertProcessor {
         def result = extension.find { item ->
             item.className == className
         }
-        System.out.println("findRegisterInfo${className}::${result == null}")
         return result
     }
     /**
@@ -110,8 +104,6 @@ class CodeInsertProcessor {
         }
         FileInputStream inputStream = new FileInputStream(file)
         FileOutputStream outputStream = new FileOutputStream(optClass)
-        System.err.println("optClass::" + optClass.absolutePath)
-        System.err.println("file::" + file.absolutePath)
         def bytes = doGenerateCode(inputStream, item)
         outputStream.write(bytes)
         inputStream.close()
@@ -148,7 +140,7 @@ class CodeInsertProcessor {
         @Override
         MethodVisitor visitMethod(int access, String name, String desc,
                                   String signature, String[] exceptions) {
-            System.out.println("visitMethod::${name}::${desc}")
+            System.out.println("tac-scanMethod::${name}::${desc}")
             MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions)
             if (extension.methodName.contains(name + desc)) { //注入代码到指定的方法之中
                 if (!desc.endsWith("V")) {
@@ -162,32 +154,14 @@ class CodeInsertProcessor {
                         mark(beginLabel)
 
                     }
-
-                    @Override
-                    void visitMaxs(int maxStack, int maxLocals) {
-                        System.out.println("in visitMaxs")
-
-                        super.visitMaxs(maxStack, maxLocals)
-                        System.out.println("out visitMaxs")
-                    }
-// 方法退出时修改字节码
+                    // 方法退出时修改字节码
                     protected void onMethodExit(int opcode) {
                         //判断不是以一场结束
                         if (ATHROW != opcode) {
-                            System.out.println("!!!!!!ATHROW")
-                            //mark(endLabel)
-                            //加载正常的返回值
-                            //returnValue()
-                            //push((Type) null);
-                            //只有一个参数就是返回值
-                            /*Type t = Type.getType("Lcom/ooftf/iorderfix/MyInter;")
-                            invokeStatic(t, new Method("print", "( )V"));*/
-                            //returnValue()
                             mark(endLabel)
                             push((Type) null);
                             catchException(beginLabel, endLabel, Type.getType(Throwable.class))
                         } else {
-                            System.out.println("ATHROW")
                         }
                     }
                 }
