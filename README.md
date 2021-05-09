@@ -1,17 +1,16 @@
 # tc-anywhere
-[ ![Download](https://api.bintray.com/packages/ooftf/maven/tc-anywhere/images/download.svg) ](https://bintray.com/ooftf/maven/tc-anywhere/_latestVersion)  
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ooftf/tc-anywhere/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ooftf/tc-anywhere)
+
 要解决的问题：有一些第三方包中存在一些崩溃问题，如果能try catch处理并不会影响程序运行，这时候就可以使用tc-anywhere来处理  
 目标：可以在任何地方添加try catch 操作；（目前只是实现了在方法无返回值的情况下添加try catch操作）
 # 使用
 ```groovy
  //project
  repositories {
-        maven {
-            url "https://dl.bintray.com/ooftf/maven"
-        }
+        mavenCentral()
  }
  dependencies {
-       classpath 'com.ooftf:tc-anywhere:0.0.1'
+       classpath 'com.github.ooftf:tc-anywhere:0.0.1'
  }
  //app
  apply plugin: 'tc-anywhere'

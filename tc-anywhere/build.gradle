@@ -1,8 +1,7 @@
 apply plugin: 'groovy'
-apply plugin: 'ooftf-publish'
+apply plugin: 'ooftf-maven'
 publish {
-    override = true
-    publishVersion = '0.0.1'
+    version = '0.0.1'
 }
 dependencies {
     implementation gradleApi()
@@ -13,13 +12,6 @@ dependencies {
 repositories {
     mavenCentral()
 }
-task sourcesJar(type: Jar) {
-    from project.file('src/main/groovy')
-    classifier = 'sources'
-}
 
-artifacts {
-    archives sourcesJar
-}
 
 
