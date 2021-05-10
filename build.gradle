@@ -11,7 +11,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.ooftf:ooftf-maven:+'
-        classpath 'com.github.ooftf:tc-anywhere:0.0.1'
+        classpath 'com.github.ooftf:tc-anywhere:0.0.2'
     }
 }
 

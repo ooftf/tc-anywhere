@@ -10,7 +10,7 @@
         mavenCentral()
  }
  dependencies {
-       classpath 'com.github.ooftf:tc-anywhere:0.0.1'
+       classpath 'com.github.ooftf:tc-anywhere:0.0.2'
  }
  //app
  apply plugin: 'tc-anywhere'

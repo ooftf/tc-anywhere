@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'ooftf-maven'
 publish {
-    version = '0.0.1'
+    version = '0.0.2'
 }
 dependencies {
     implementation gradleApi()
